@@ -1,0 +1,33 @@
+{
+  "name": "ssh2-config",
+  "version": "0.0.2",
+  "description": "ssh config reader",
+  "author": "Kengo Nakatsuka <kengo.nakatsuka@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/nak2k/node-ssh2-config/issues"
+  },
+  "dependencies": {
+    "async": "^1.2.1",
+    "etc-passwd": "^0.1.1"
+  },
+  "devDependencies": {
+    "minimist": "^1.1.1",
+    "ssh2": "^0.4.9",
+    "tape": "^4.0.0"
+  },
+  "homepage": "https://github.com/nak2k/node-ssh2-config",
+  "keywords": [],
+  "license": "MIT",
+  "main": "lib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nak2k/node-ssh2-config.git"
+  },
+  "scripts": {
+    "test": "tape test/*"
+  },
+  "files": [
+    "README.md",
+    "lib/"
+  ]
+}
