@@ -1,6 +1,6 @@
 {
   "name": "ssh2-config",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ssh config reader",
   "author": "Kengo Nakatsuka <kengo.nakatsuka@gmail.com>",
   "bugs": {
