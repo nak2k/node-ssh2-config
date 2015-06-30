@@ -16,7 +16,11 @@
     "tape": "^4.0.0"
   },
   "homepage": "https://github.com/nak2k/node-ssh2-config",
-  "keywords": [],
+  "keywords": [
+    "ssh",
+    "ssh2",
+    "config"
+  ],
   "license": "MIT",
   "main": "lib",
   "repository": {
