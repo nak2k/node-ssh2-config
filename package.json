@@ -1,6 +1,6 @@
 {
   "name": "ssh2-config",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ssh config reader",
   "author": "Kengo Nakatsuka <kengo.nakatsuka@gmail.com>",
   "bugs": {
@@ -16,7 +16,11 @@
     "tape": "^4.0.0"
   },
   "homepage": "https://github.com/nak2k/node-ssh2-config",
-  "keywords": [],
+  "keywords": [
+    "ssh",
+    "ssh2",
+    "config"
+  ],
   "license": "MIT",
   "main": "lib",
   "repository": {
