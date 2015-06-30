@@ -25,6 +25,10 @@ sshConfig({ host: 'example.com', preferSsh2: true }, function(err, result) {
 * `options.preferSsh2` -
 * `callback(err, result)` -
 
+### sshConfig.sync(options)
+
+Synchronous version of `sshConfig`.
+
 ## TODO
 
 ## License
