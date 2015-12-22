@@ -1,6 +1,6 @@
 {
   "name": "ssh2-config",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "ssh config reader",
   "author": "Kengo Nakatsuka <kengo.nakatsuka@gmail.com>",
   "bugs": {
@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "minimist": "^1.1.1",
-    "ssh2": "^0.4.9",
+    "ssh2": "^0.4.13",
     "tape": "^4.0.0"
   },
   "homepage": "https://github.com/nak2k/node-ssh2-config",
