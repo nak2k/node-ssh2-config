@@ -7,7 +7,7 @@
     "url": "https://github.com/nak2k/node-ssh2-config/issues"
   },
   "dependencies": {
-    "async": "^1.2.1",
+    "async": "^1.5.1",
     "etc-passwd": "^0.1.1"
   },
   "devDependencies": {
