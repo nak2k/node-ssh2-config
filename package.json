@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "minimist": "^1.1.1",
-    "ssh2": "^0.4.14",
+    "ssh2": "^0.4.15",
     "tape": "^4.5.1"
   },
   "homepage": "https://github.com/nak2k/node-ssh2-config",
