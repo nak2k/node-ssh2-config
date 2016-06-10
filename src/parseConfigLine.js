@@ -1,25 +1,23 @@
-var parsers = require('./parsers');
+import * as parsers from './parsers';
 
-module.exports = parseConfigLine;
+export function parseConfigLine(line, context) {
+  const result1 = parsers.optWhiteSpace(line, 0);
 
-function parseConfigLine(line, context) {
-  var result;
-
-  result = parsers.optWhiteSpace(line, 0);
-
-  if (result[2] === line.length || line[result[2]] === '#') {
+  if (result1[2] === line.length || line[result1[2]] === '#') {
     return;
   }
 
-  result = parsers.keyword(line, result[2]);
-  if (!result[0]) {
-    setError(context, result);
+  const result2 = parsers.keyword(line, result1[2]);
+  if (!result2[0]) {
+    setError(context, result2);
     return;
   }
 
-  var keywordInfo = result[1];
+  const keywordInfo = result2[1];
 
-  result = parsers.separatorAfterKeyword(line, result[2]);
+  let result;
+
+  result = parsers.separatorAfterKeyword(line, result2[2]);
   if (!result[0]) {
     setError(context, result);
     return;
@@ -31,7 +29,7 @@ function parseConfigLine(line, context) {
     return;
   }
 
-  var args = result[1];
+  const args = result[1];
 
   if (keywordInfo.handler) {
     keywordInfo.handler(context, args);
@@ -40,7 +38,7 @@ function parseConfigLine(line, context) {
       context.result[keywordInfo.keyword] = args;
     }
   }
-  
+
   result = parsers.optWhiteSpace(line, result[2]);
 
   if (result[2] !== line.length) {
@@ -50,6 +48,6 @@ function parseConfigLine(line, context) {
 }
 
 function setError(context, result) {
-  var msg = result[1] + ' (file: ' + context.file + ' line: ' + context.lineno + ' column: ' + (result[2] + 1) + ')';
+  const msg = `${result[1]} (file: ${context.file} line: ${context.lineno} column: ${result[2] + 1})`;
   context.error = new Error(msg);
 }

@@ -1,0 +1,164 @@
+export const token = str => (src, pos) =>
+  (src.substr(pos, str.length) === str
+    ? [true, str, pos + str.length]
+    : [false, null, pos]);
+
+export const quotableToken = str => quotable(token(str))
+
+export const regex = regexp => {
+  const compiledRegexp = new RegExp('^' + regexp.source, regexp.ignoreCase ? 'i' : '');
+
+  return (src, pos) => {
+    const matches = src.substr(pos).match(compiledRegexp);
+
+    return matches
+      ? [true, matches[0], pos + matches[0].length]
+      : [false, null, pos];
+  };
+}
+
+export const quotable = parser => (src, pos) => {
+  if (src[pos] === '"') {
+    const result = parser(src, pos + 1);
+    if (result[0]) {
+      if (src[result[2]] === '"') {
+        result[2]++;
+        return result;
+      } else {
+        return [false, 'Quoted string not terminated', pos];
+      }
+    } else {
+      return result;
+    }
+  } else {
+    return parser(src, pos);
+  }
+};
+
+export const option = parser => (src, pos) => {
+  const result = parser(src, pos);
+  if (result[0]) {
+    return result;
+  } else {
+    return [true, null, pos];
+  }
+};
+
+export const choice = (...parsers) => (src, pos) => {
+  for(let i = 0; i < parsers.length; ++i) {
+    const result = parsers[i](src, pos);
+    if (result[0]) {
+      return result;
+    }
+  }
+
+  return [false, null, pos];
+};
+
+export const seq = (...parsers) => (src, pos) => {
+  const values = [];
+
+  for(let i = 0; i < parsers.length; ++i) {
+    const result = parsers[i](src, pos);
+
+    if (!result[0]) {
+      return result;
+    }
+
+    values.push(result[1]);
+    pos = result[2];
+  }
+
+  return [true, values, pos];
+};
+
+export const many = parser => (src, pos) => {
+  const values = [];
+
+  while(true) {
+    const result = parser(src, pos);
+    if (result[0]) {
+      values.push(result[1]);
+      pos = result[2];
+    } else {
+      return [true, values, pos];
+    }
+  }
+};
+
+export const map = (parser, mapper) => {
+  if (typeof mapper !== 'function') {
+    const value = mapper;
+    mapper = function() { return value; }
+  }
+
+  return (src, pos) => {
+    const result = parser(src, pos);
+
+    if (result[0]) {
+      result[1] = mapper(result[1]);
+    }
+
+    return result;
+  };
+}
+
+export const mapFailure = (parser, mapper) => {
+  if (typeof mapper !== 'function') {
+    const value = mapper;
+    mapper = function() { return value; }
+  }
+
+  return (src, pos) => {
+    const result = parser(src, pos);
+
+    if (!result[0]) {
+      result[1] = mapper(result[1]);
+    }
+
+    return result;
+  };
+}
+
+export const matchPattern = (str, pattern) => {
+  let i = 0, j = 0;
+
+  while(i < str.length && j < pattern.length) {
+    let p = pattern[j];
+
+    if (p === '?') {
+      ++i, ++j;
+      continue;
+    } else if (p === '*') {
+      ++i, ++j;
+
+      if (j === pattern.length) {
+        return true;
+      }
+
+      p = pattern[j];
+      if (p === '?' || p === '*') {
+        continue;
+      }
+
+      while(i < str.length && str[i] !== p) {
+        ++i;
+      }
+
+      if (i === str.length) {
+        return false;
+      }
+
+      continue;
+    } else {
+      if (str[i] !== p) {
+        return false;
+      }
+
+      ++i, ++j;
+      continue;
+    }
+  }
+
+  return i > 0 && i === str.length && j === pattern.length;
+}

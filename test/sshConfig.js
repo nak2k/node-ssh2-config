@@ -1,8 +1,8 @@
-var test = require('tape');
-var sshConfig = require('..');
+import test from 'tape';
+import sshConfig from '../src';
 
-test('test sshConfig', function (t) {
-  sshConfig({ host: 'test' }, function(err, result) {
+test('test sshConfig', t => {
+  sshConfig({ host: 'test' }, (err, result) => {
     t.end(err);
   });
 });
