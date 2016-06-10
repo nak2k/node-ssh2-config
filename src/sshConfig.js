@@ -46,7 +46,7 @@ function sshConfigSync(options) {
   result = processConfigFilesSync(result, options);
 
   if (options.preferSsh2) {
-    result = translateToSsh2(result, options, callback);
+    result = translateToSsh2Sync(result, options);
   }
 
   return result;
