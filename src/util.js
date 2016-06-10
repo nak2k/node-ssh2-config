@@ -20,7 +20,7 @@ export const regex = regexp => {
 export const quotable = parser => (src, pos) => {
   if (src[pos] === '"') {
     const result = parser(src, pos + 1);
-    if (!result[0]) {
+    if (result[0]) {
       if (src[result[2]] === '"') {
         result[2]++;
         return result;
