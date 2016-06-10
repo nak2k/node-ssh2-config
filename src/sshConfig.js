@@ -1,6 +1,6 @@
 import { parseConfigLine } from './parseConfigLine';
 import parseConfigFile from './parseConfigFile';
-import passwd from 'etc-passwd';
+import { homedir } from 'os';
 import async from 'async';
 import path from 'path';
 import fs from 'fs';
@@ -89,13 +89,11 @@ function processConfigFiles(result, options, callback) {
     parseConfigFile(options.userSpecificFile, result, options, callback);
   } else {
     async.waterfall([
-      getHomeDirectory,
-
       /*
        * Read ~/.ssh/config
        */
-      (homeDir, callback) => {
-        const p = path.join(homeDir, '.ssh/config');
+      callback => {
+        const p = path.join(homedir(), '.ssh/config');
 
         if (fs.existsSync(p)) {
           parseConfigFile(p, result, options, callback);
@@ -132,7 +130,7 @@ function processConfigFilesSync(result, options) {
     /*
      * Read ~/.ssh/config
      */
-    p = path.join(process.env.HOME, '.ssh/config');
+    p = path.join(homedir(), '.ssh/config');
 
     if (fs.existsSync(p)) {
       parseConfigFile.sync(p, result, options);
@@ -149,29 +147,6 @@ function processConfigFilesSync(result, options) {
 
     return result;
   }
-}
-
-function getHomeDirectory(callback) {
-  passwd.getUsers((err, users) => {
-    if (err) {
-      return callback(err);
-    }
-
-    const uid = process.getuid();
-    let u;
-
-    while((u = users.shift())) {
-      if (u.uid === uid) {
-        return callback(null, u.home);
-      }
-    }
-
-    if (process.env.HOME) {
-      return callback(null, process.env.HOME);
-    }
-
-    callback(new Error('$HOME is not set'));
-  });
 }
 
 function translateToSsh2(result, options, callback) {
@@ -195,13 +170,7 @@ function translateToSsh2(result, options, callback) {
         return callback(new Error('Not supported ~username'));
       }
 
-      getHomeDirectory((err, homeDir) => {
-        if (err) {
-          return callback(err);
-        }
-
-        callback(null, path.join(homeDir, result.IdentityFile.substr(2)));
-      });
+      callback(null, path.join(homedir(), result.IdentityFile.substr(2)));
     },
 
     async.apply(fs.readFile),
