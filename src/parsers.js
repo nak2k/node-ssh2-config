@@ -1,29 +1,21 @@
-var util = require('./util');
+import {
+  token, quotableToken, regex, quotable, option, choice,
+  seq, many, map, mapFailure, matchPattern,
+} from './util';
 
-var token = util.token;
-var quotableToken = util.quotableToken;
-var regex = util.regex;
-var quotable = util.quotable;
-var option = util.option;
-var choice = util.choice;
-var seq = util.seq;
-var many = util.many;
-var map = util.map;
-var mapFailure = util.mapFailure;
+export const whiteSpace = regex(/\s+/);
+export const optWhiteSpace = option(whiteSpace);
+export const notWhiteSpace = regex(/\S+/);
+export const optEqual = option(token('='));
 
-var whiteSpace = exports.whiteSpace = regex(/\s+/);
-var optWhiteSpace = exports.optWhiteSpace = option(whiteSpace);
-var notWhiteSpace = exports.notWhiteSpace = regex(/\S+/);
-var optEqual = exports.optEqual = option(token('='));
-
-var argYesNo = exports.argYesNo = mapFailure(
+export const argYesNo = mapFailure(
   choice(
     map(quotableToken('yes'), true),
     map(quotableToken('no'), false)
   ),
   "'yes' or 'no' must be specified");
 
-var argYesNoAsk = exports.argYesNo = mapFailure(
+export const argYesNoAsk = mapFailure(
   choice(
     map(quotableToken('yes'), true),
     map(quotableToken('no'), false),
@@ -31,46 +23,43 @@ var argYesNoAsk = exports.argYesNo = mapFailure(
   ),
   "'yes', 'no', or 'ask' must be specified");
 
-var argInt = exports.argInt = map(
+export const argInt = map(
   quotable(regex(/(0|0x)?\d+/)),
-  function(value) {
-    return parseInt(value, 0);
-  });
+  value => parseInt(value, 0)
+);
 
-var argAny = exports.argAny = quotable(regex(/[^\s"]+/));
+export const argAny = quotable(regex(/[^\s"]+/));
 
-var argOneHost = exports.argOneHost = argAny;
+export const argOneHost = argAny;
 
-var argHosts = exports.argHosts = many(
+export const argHosts = many(
   map(
     seq(optWhiteSpace, argOneHost),
-    function(values) {
-      return values[1];
-    }
+    values => values[1]
   ));
 
-var keywordTable = [
+const keywordTable = [
   {
     keyword: 'Host',
     argParser: argHosts,
     handler: function(context, args) {
-      var host = context.options.host || '';
-      var matched;
+      const host = context.options.host || '';
+      let matched;
 
-      for(var i = 0; i < args.length; ++i) {
-        var arg = args[i];
-        var negate;
+      for(let i = 0; i < args.length; ++i) {
+        let arg = args[i];
+        let negate;
 
         if (arg[0] === '!') {
           negate = true;
           arg = arg.substr(1);
         }
 
-        if (util.matchPattern(host, arg)) {
+        if (matchPattern(host, arg)) {
           matched = true;
           if (negate) {
             context.ignore = true;
-            return;            
+            return;
           } else {
             context.ignore = false;
           }
@@ -392,40 +381,34 @@ var keywordTable = [
   },
 ];
 
-exports.keyword = (function (keywordTable) {
-  return function(src, pos) {
-    var result = notWhiteSpace(src, pos);
+export const keyword = (keywordTable => (src, pos) => {
+  const result = notWhiteSpace(src, pos);
 
-    if (!result[0]) {
-      return [false, "Keyword not found", pos];
+  if (!result[0]) {
+    return [false, "Keyword not found", pos];
+  }
+
+  const word = result[1];
+
+  for(let i = 0; i < keywordTable.length; ++i) {
+    const keywordInfo = keywordTable[i];
+
+    if (word.toLowerCase() === keywordInfo.keyword.toLowerCase()) {
+      result[1] = keywordInfo;
+      return result;
     }
+  }
 
-    var word = result[1];
-
-    for(var i = 0; i < keywordTable.length; ++i) {
-      var keywordInfo = keywordTable[i];
-
-      if (word.toLowerCase() === keywordInfo.keyword.toLowerCase()) {
-        result[1] = keywordInfo;
-        return result;
-      }
-    }
-
-    return [false, "Unknown keyword '" + word + "'", pos];
-  };
+  return [false, `Unknown keyword '${word}'`, pos];
 })(keywordTable);
 
-exports.separatorAfterKeyword = (function() {
-  var parser = seq(optWhiteSpace, optEqual, optWhiteSpace);
-  
-  return function(src, pos) {
-    var result = parser(src, pos);
-    var values = result[1];
+export const separatorAfterKeyword = (parser => (src, pos) => {
+  const result = parser(src, pos);
+  const values = result[1];
 
-    if (!values[0] && !values[1] && !values[2]) {
-      return [false, "Either white spaces or an equal not exist after a keyword", pos];
-    }
+  if (!values[0] && !values[1] && !values[2]) {
+    return [false, "Either white spaces or an equal not exist after a keyword", pos];
+  }
 
-    return result;
-  };
-})();
+  return result;
+})(seq(optWhiteSpace, optEqual, optWhiteSpace));

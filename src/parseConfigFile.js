@@ -1,11 +1,11 @@
-var fs = require('fs');
-var parseConfigLine = require('./parseConfigLine');
+import fs from 'fs';
+import { parseConfigLine } from './parseConfigLine';
 
 exports = module.exports = parseConfigFile;
 exports.sync = parseConfigFileSync;
 
 function parseConfigFile(file, result, options, callback) {
-  fs.readFile(file, { encoding: 'utf8' }, function(err, data) {
+  fs.readFile(file, { encoding: 'utf8' }, (err, data) => {
     if (err) {
       return callback(err);
     }
@@ -15,9 +15,9 @@ function parseConfigFile(file, result, options, callback) {
 }
 
 function parseConfigFileSync(file, result, options) {
-  var data = fs.readFileSync(file, { encoding: 'utf8' });
+  const data = fs.readFileSync(file, { encoding: 'utf8' });
 
-  return processConfig(file, result, options, data, function(err, result) {
+  return processConfig(file, result, options, data, (err, result) => {
     if (err) {
       throw err;
     }
@@ -27,9 +27,10 @@ function parseConfigFileSync(file, result, options) {
 }
 
 function processConfig(file, result, options, data, callback) {
-  var lines = data.split('\n');
-  var line;
-  var parseContext = {
+  const lines = data.split('\n');
+  let line;
+
+  const parseContext = {
     result: result,
     options: options,
     file: file,

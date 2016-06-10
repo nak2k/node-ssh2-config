@@ -1,10 +1,10 @@
-var test = require('tape');
-var sshConfig = require('..').sync;
+import test from 'tape';
+import sshConfig from '../src';
 
-test('test sshConfig.sync', function (t) {
+test('test sshConfig.sync', t => {
   t.plan(1);
 
-  var result = sshConfig({ host: 'test' });
+  const result = sshConfig.sync({ host: 'test' });
 
   t.equal(typeof result, 'object', 'result must be a object');
 });

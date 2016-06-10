@@ -1,25 +1,25 @@
-var parseConfigFile = require('./parseConfigFile');
-var parseConfigLine = require('./parseConfigLine');
-var passwd = require('etc-passwd');
-var async = require('async');
-var path = require('path');
-var fs = require('fs');
+import { parseConfigLine } from './parseConfigLine';
+import parseConfigFile from './parseConfigFile';
+import passwd from 'etc-passwd';
+import async from 'async';
+import path from 'path';
+import fs from 'fs';
 
 exports = module.exports = sshConfig;
 exports.sync = sshConfigSync;
 
 function sshConfig(options, callback) {
-  var result = options.result || {};
+  const result = options.result || {};
 
   if (options.commandLineOptions) {
-    var err = processCommandLineOptions(options, result, callback);
+    const err = processCommandLineOptions(options, result, callback);
 
     if (err) {
       return callback(err);
     }
   }
 
-  processConfigFiles(result, options, function(err, result) {
+  processConfigFiles(result, options, (err, result) => {
     if (err) {
       return callback(err);
     }
@@ -33,17 +33,17 @@ function sshConfig(options, callback) {
 }
 
 function sshConfigSync(options) {
-  var result = options.result || {};
+  let result = options.result || {};
 
   if (options.commandLineOptions) {
-    var err = processCommandLineOptions(options, result, callback);
+    const err = processCommandLineOptions(options, result, callback);
 
     if (err) {
       throw err;
     }
   }
 
-  var result = processConfigFilesSync(result, options);
+  result = processConfigFilesSync(result, options);
 
   if (options.preferSsh2) {
     result = translateToSsh2(result, options, callback);
@@ -53,9 +53,9 @@ function sshConfigSync(options) {
 }
 
 function processCommandLineOptions(options, result) {
-  var commandLineOptions = options.commandLineOptions;
-  var line;
-  var parseContext = {
+  const commandLineOptions = options.commandLineOptions;
+
+  const parseContext = {
     result: result,
     options: options,
     file: null,
@@ -65,8 +65,10 @@ function processCommandLineOptions(options, result) {
   };
 
   if (Array.isArray(commandLineOptions)) {
-    commandLineOptions = commandLineOptions.slice();
-    while((line = commandLineOptions.shift())) {
+    let line;
+
+    const commandLineOptions2 = commandLineOptions.slice();
+    while((line = commandLineOptions2.shift())) {
       parseConfigLine(line, parseContext);
       if (parseContext.error) {
         break;
@@ -88,12 +90,12 @@ function processConfigFiles(result, options, callback) {
   } else {
     async.waterfall([
       getHomeDirectory,
-      
+
       /*
        * Read ~/.ssh/config
        */
-      function(homeDir, callback) {
-        var p = path.join(homeDir, '.ssh/config');
+      (homeDir, callback) => {
+        const p = path.join(homeDir, '.ssh/config');
 
         if (fs.existsSync(p)) {
           parseConfigFile(p, result, options, callback);
@@ -101,12 +103,12 @@ function processConfigFiles(result, options, callback) {
           callback(null, result);
         }
       },
-      
+
       /*
        * Read /etc/ssh/ssh_config
        */
-      function(result, callback) {
-        var p = '/etc/ssh/ssh_config';
+      (result, callback) => {
+        const p = '/etc/ssh/ssh_config';
 
         if (fs.existsSync(p)) {
           parseConfigFile(p, result, options, callback);
@@ -125,7 +127,7 @@ function processConfigFilesSync(result, options) {
      */
     return parseConfigFile.sync(options.userSpecificFile, result, options);
   } else {
-    var p;
+    let p;
 
     /*
      * Read ~/.ssh/config
@@ -150,13 +152,13 @@ function processConfigFilesSync(result, options) {
 }
 
 function getHomeDirectory(callback) {
-  passwd.getUsers(function(err, users) {
+  passwd.getUsers((err, users) => {
     if (err) {
       return callback(err);
     }
 
-    var uid = process.getuid();
-    var u;
+    const uid = process.getuid();
+    let u;
 
     while((u = users.shift())) {
       if (u.uid === uid) {
@@ -173,7 +175,7 @@ function getHomeDirectory(callback) {
 }
 
 function translateToSsh2(result, options, callback) {
-  var ssh2Config = {
+  const ssh2Config = {
     host: result.HostName || options.host,
     port: result.Port,
     username: result.User,
@@ -184,7 +186,7 @@ function translateToSsh2(result, options, callback) {
   }
 
   async.waterfall([
-    function(callback) {
+    callback => {
       if (result.IdentityFile[0] !== '~') {
         return callback(null, result.IdentityFile);
       }
@@ -193,7 +195,7 @@ function translateToSsh2(result, options, callback) {
         return callback(new Error('Not supported ~username'));
       }
 
-      getHomeDirectory(function(err, homeDir) {
+      getHomeDirectory((err, homeDir) => {
         if (err) {
           return callback(err);
         }
@@ -203,7 +205,7 @@ function translateToSsh2(result, options, callback) {
     },
 
     async.apply(fs.readFile),
-  ], function(err, data) {
+  ], (err, data) => {
     if (err) {
       return callback(err);
     }
@@ -215,7 +217,7 @@ function translateToSsh2(result, options, callback) {
 }
 
 function translateToSsh2Sync(result, options) {
-  var ssh2Config = {
+  const ssh2Config = {
     host: result.HostName || options.host,
     port: result.Port,
     username: result.User,
@@ -225,7 +227,7 @@ function translateToSsh2Sync(result, options) {
     return ssh2Config;
   }
 
-  var identityFilePath = result.IdentityFile;
+  let identityFilePath = result.IdentityFile;
 
   if (identityFilePath[0] === '~') {
     if (identityFilePath[1] !== '/') {
