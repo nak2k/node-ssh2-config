@@ -12,7 +12,7 @@ function sshConfig(options, callback) {
   const result = options.result || {};
 
   if (options.commandLineOptions) {
-    const err = processCommandLineOptions(options, result, callback);
+    const err = processCommandLineOptions(options, result);
 
     if (err) {
       return callback(err);
@@ -36,7 +36,7 @@ function sshConfigSync(options) {
   let result = options.result || {};
 
   if (options.commandLineOptions) {
-    const err = processCommandLineOptions(options, result, callback);
+    const err = processCommandLineOptions(options, result);
 
     if (err) {
       throw err;
