@@ -7,7 +7,7 @@
     "url": "https://github.com/nak2k/node-ssh2-config/issues"
   },
   "dependencies": {
-    "async": "^1.5.2"
+    "async": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
