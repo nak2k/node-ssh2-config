@@ -15,7 +15,7 @@
     "eslint": "^3.10.2",
     "minimist": "^1.2.0",
     "ssh2": "^0.5.4",
-    "tape": "^4.6.0"
+    "tape": "^4.6.3"
   },
   "homepage": "https://github.com/nak2k/node-ssh2-config",
   "keywords": [
