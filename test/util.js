@@ -1,7 +1,7 @@
-import test from 'tape';
-import {
+const test = require('tape');
+const {
   quotableToken,
-} from '../src/util';
+} = require('../lib/util');
 
 test('test quotableToken', t => {
   t.plan(7);

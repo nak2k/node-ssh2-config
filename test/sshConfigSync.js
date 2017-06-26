@@ -1,5 +1,5 @@
-import test from 'tape';
-import sshConfig from '../src';
+const test = require('tape');
+const sshConfig = require('../lib');
 
 test('test sshConfig.sync', t => {
   t.plan(2);
