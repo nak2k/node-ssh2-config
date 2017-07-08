@@ -2,6 +2,12 @@
 
 ssh config ファイルの読み込みパッケージ。
 
+## Installation
+
+```
+npm i ssh2-config -S
+```
+
 ## Usage
 
 ```

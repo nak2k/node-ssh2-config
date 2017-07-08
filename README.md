@@ -2,7 +2,13 @@
 
 SSH config reader.
 
-## Example
+## Installation
+
+```
+npm i ssh2-config -S
+```
+
+## Usage
 
 ```
 var sshConfig = require('ssh2-config');
@@ -14,22 +20,37 @@ sshConfig({ host: 'example.com', preferSsh2: true }, function(err, result) {
 });
 ```
 
-## API
+## sshConfig(options, callback)
 
-### sshConfig(options, callback)
+### Parameters
 
-* `options.host` - 
-* `options.commandLineOptions` - 
-* `options.userSpecificFile` -
-* `options.result` -
-* `options.preferSsh2` -
-* `callback(err, result)` -
+- `options.host`
+    - A string of the host name to read the setting.
+- `options.commandLineOptions`
+    - An array of options equivalent to `-o` of `ssh` command.
+- `options.userSpecificFile`
+    - A path of the configuration file to be read.
+- `options.result`
+    - The result that was read previously.
+- `options.preferSsh2`
+    - A boolean value as to whether to return the result corresponding to `ssh2` package.
+- `callback(err, result)`
+    - A callback called when setting loading is completed, or when an error occurs.
 
-### sshConfig.sync(options)
+### Result
+
+The `result` argument of `callback` changes properties of the object by `options.preferSsh2`.
+
+If `options.preferSsh2` is truthy, the `result` has the following properties:
+
+- `host`
+- `port`
+- `username`
+- `privateKey`
+
+## sshConfig.sync(options)
 
 Synchronous version of `sshConfig`.
-
-## TODO
 
 ## License
 
