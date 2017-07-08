@@ -15,7 +15,7 @@ var sshConfig = require('ssh2-config');
 var Client = require('ssh2').Client;
 
 sshConfig({ host: 'example.com', preferSsh2: true }, function(err, result) {
-  var c = new Clinet();
+  var c = new Client();
   c.connect(result);
 });
 ```

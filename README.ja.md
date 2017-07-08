@@ -15,7 +15,7 @@ const sshConfig = require('ssh2-config');
 const { Client } = require('ssh2');
 
 sshConfig({ host: 'example.com', preferSsh2: true }, (err, result) => {
-  const c = new Clinet();
+  const c = new Client();
   c.connect(result);
 });
 ```
