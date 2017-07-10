@@ -1,7 +1,7 @@
 const test = require('tape');
 const {
   quotableToken,
-} = require('../lib/util');
+} = require('../lib/parser/util');
 
 test('test quotableToken', t => {
   t.plan(7);
