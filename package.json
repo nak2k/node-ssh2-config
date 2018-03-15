@@ -27,7 +27,7 @@
   },
   "scripts": {
     "lint": "eslint lib",
-    "prepare": "npm run lint && npm test",
+    "prepublishOnly": "npm run lint && npm test",
     "test": "tape test/*"
   },
   "files": [
