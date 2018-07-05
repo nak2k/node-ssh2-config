@@ -5,17 +5,17 @@ SSH config reader.
 ## Installation
 
 ```
-npm i ssh2-config -S
+npm i ssh2-config
 ```
 
 ## Usage
 
 ```
-var sshConfig = require('ssh2-config');
-var Client = require('ssh2').Client;
+const sshConfig = require('ssh2-config');
+const { Client } = require('ssh2');
 
-sshConfig({ host: 'example.com', preferSsh2: true }, function(err, result) {
-  var c = new Client();
+sshConfig({ host: 'example.com', preferSsh2: true }, (err, result) => {
+  const c = new Client();
   c.connect(result);
 });
 ```
