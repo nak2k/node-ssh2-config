@@ -10,7 +10,7 @@
   "devDependencies": {
     "eslint": "^5.13.0",
     "minimist": "^1.2.0",
-    "ssh2": "^0.8.2",
+    "ssh2": "^1.4.0",
     "tape": "^4.9.2"
   },
   "homepage": "https://github.com/nak2k/node-ssh2-config",
